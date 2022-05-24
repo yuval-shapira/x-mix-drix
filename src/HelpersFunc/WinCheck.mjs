@@ -1,52 +1,52 @@
 function winCheck(currentPlayer, tableValues) {
     if (
-      tableValues[0] === currentPlayer &&
-      tableValues[1] === currentPlayer &&
-      tableValues[2] === currentPlayer
+      tableValues.cell_1 === currentPlayer &&
+      tableValues.cell_2 === currentPlayer &&
+      tableValues.cell_3 === currentPlayer
     )
-      return "Yes";
+      return true;
     if (
-      tableValues[3] === currentPlayer &&
-      tableValues[4] === currentPlayer &&
-      tableValues[5] === currentPlayer
+      tableValues?.cell_4 === currentPlayer &&
+      tableValues?.cell_5 === currentPlayer &&
+      tableValues?.cell_6 === currentPlayer
     )
-      return "Yes";
+      return true;
     if (
-      tableValues[6] === currentPlayer &&
-      tableValues[7] === currentPlayer &&
-      tableValues[8] === currentPlayer
+      tableValues?.cell_7 === currentPlayer &&
+      tableValues?.cell_8 === currentPlayer &&
+      tableValues?.cell_9 === currentPlayer
     )
-      return "Yes";
+      return true;
     if (
-      tableValues[0] === currentPlayer &&
-      tableValues[3] === currentPlayer &&
-      tableValues[6] === currentPlayer
+      tableValues?.cell_1 === currentPlayer &&
+      tableValues?.cell_4 === currentPlayer &&
+      tableValues?.cell_7 === currentPlayer
     )
-      return "Yes";
+      return true;
     if (
-      tableValues[1] === currentPlayer &&
-      tableValues[4] === currentPlayer &&
-      tableValues[7] === currentPlayer
+      tableValues?.cell_2 === currentPlayer &&
+      tableValues?.cell_5 === currentPlayer &&
+      tableValues?.cell_8 === currentPlayer
     )
-      return "Yes";
+      return true;
     if (
-      tableValues[2] === currentPlayer &&
-      tableValues[5] === currentPlayer &&
-      tableValues[8] === currentPlayer
+      tableValues?.cell_3 === currentPlayer &&
+      tableValues?.cell_6 === currentPlayer &&
+      tableValues?.cell_9 === currentPlayer
     )
-      return "Yes";
+      return true;
     if (
-      tableValues[2] === currentPlayer &&
-      tableValues[4] === currentPlayer &&
-      tableValues[6] === currentPlayer
+      tableValues?.cell_3 === currentPlayer &&
+      tableValues?.cell_5 === currentPlayer &&
+      tableValues?.cell_7 === currentPlayer
     )
-      return "Yes";
+      return true;
     if (
-      tableValues[0] === currentPlayer &&
-      tableValues[4] === currentPlayer &&
-      tableValues[8] === currentPlayer
+      tableValues?.cell_1 === currentPlayer &&
+      tableValues?.cell_5 === currentPlayer &&
+      tableValues?.cell_9 === currentPlayer
     )
-      return "Yes";
-    return "No";
+      return true;
+    return false;
   }
   export default winCheck;
