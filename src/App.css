@@ -30,3 +30,6 @@ body {
 img{
   height: 100%;
 }
+div.win{
+  background-color: rgb(47, 252, 211);
+}

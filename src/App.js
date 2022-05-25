@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
-import winCheck from "./HelpersFunc/WinCheck.mjs";
-//const tableValues = [null, null, null, null, null, null, null, null, null];
+import { winCheck, markCells } from "./HelpersFunc/WinCheckAndMark.mjs";
 
 const tableGame = [];
 function setTableGame() {
@@ -10,10 +9,10 @@ function setTableGame() {
   }
 
   for (let key = 1; key < 10; key++) {
-    const cellName = `cell_${key}`;
+    const cellID = `cell_${key}`;
     tableGame.push({
       key,
-      cellName,
+      cellID,
       move: null,
     });
   }
@@ -35,6 +34,14 @@ const ACTIONS = {
   CELL_8: "cell_8",
   CELL_9: "cell_9",
   CLEAR: "clear",
+  ROW_1_WIN: "row1",
+  ROW_2_WIN: "row2",
+  ROW_3_WIN: "row3",
+  COL_1_WIN: "col1",
+  COL_2_WIN: "col2",
+  COL_3_WIN: "col3",
+  CROSS_1_WIN: "crx1",
+  CROSS_2_WIN: "crx2",
 };
 
 export default function App() {
@@ -43,24 +50,53 @@ export default function App() {
   const [currentPlayer, setCurrentPlayer] = React.useState(ACTIONS.X_PLAYER);
 
   function clickHanler(sq) {
-    if (!state.hasOwnProperty(sq.cellName) || sq.cellName === ACTIONS.CLEAR) {
-      dispatch({ clickedCell: sq.cellName, player: currentPlayer });
-      if (sq.cellName !== ACTIONS.CLEAR) {
+    if (!state.hasOwnProperty(sq.cellID) || sq.cellID === ACTIONS.CLEAR) {
+      dispatch({ clickedCell: sq.cellID, player: currentPlayer });
+      if (sq.cellID !== ACTIONS.CLEAR) {
         const imgLink =
           currentPlayer === ACTIONS.X_PLAYER ? ACTIONS.X_IMG : ACTIONS.O_IMG;
         tableGame[sq.key - 1].move = imgLink;
       } else {
         setTableGame();
+        markCells("clear");
       }
-      sq.cellName !== ACTIONS.CLEAR && currentPlayer === ACTIONS.X_PLAYER
+
+      const winner = winCheck(currentPlayer, state);
+      if (winner) {
+        switch (winner) {
+          case ACTIONS.ROW_1_WIN:
+            markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_2, ACTIONS.CELL_3);
+            return;
+          case ACTIONS.ROW_2_WIN:
+            markCells("add", ACTIONS.CELL_4, ACTIONS.CELL_5, ACTIONS.CELL_6);
+            return;
+          case ACTIONS.ROW_3_WIN:
+            markCells("add", ACTIONS.CELL_7, ACTIONS.CELL_8, ACTIONS.CELL_9);
+            return;
+          case ACTIONS.COL_1_WIN:
+            markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_4, ACTIONS.CELL_7);
+            return;
+          case ACTIONS.COL_2_WIN:
+            markCells("add", ACTIONS.CELL_2, ACTIONS.CELL_5, ACTIONS.CELL_8);
+            return;
+          case ACTIONS.COL_3_WIN:
+            markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_6, ACTIONS.CELL_9);
+            return;
+          case ACTIONS.CROSS_1_WIN:
+            markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_5, ACTIONS.CELL_7);
+            return;
+          case ACTIONS.CROSS_2_WIN:
+            markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_5, ACTIONS.CELL_9);
+            return;
+          default:
+            return;
+        }
+      }
+
+      sq.cellID !== ACTIONS.CLEAR && currentPlayer === ACTIONS.X_PLAYER
         ? setCurrentPlayer(ACTIONS.O_PLAYER)
         : setCurrentPlayer(ACTIONS.X_PLAYER);
     }
-
-    const a =
-      currentPlayer === ACTIONS.X_PLAYER ? ACTIONS.O_PLAYER : ACTIONS.X_PLAYER;
-    const winner = winCheck(a, state);
-    console.log(`winner: ${winner}`);
   }
 
   function reducer(state, { clickedCell, player }) {
@@ -129,13 +165,13 @@ export default function App() {
         <div className="grid-container">
           {tableGame.map((sq) => {
             return (
-              <div key={sq.key} onClick={() => clickHanler(sq)}>
+              <div key={sq.key} id={sq.cellID} onClick={() => clickHanler(sq)}>
                 <img src={sq.move} alt="" />
               </div>
             );
           })}
         </div>
-        <button onClick={() => clickHanler({ cellName: ACTIONS.CLEAR })}>
+        <button onClick={() => clickHanler({ cellID: ACTIONS.CLEAR })}>
           Clear Game
         </button>
       </main>
