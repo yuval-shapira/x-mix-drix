@@ -50,52 +50,22 @@ export default function App() {
   const [currentPlayer, setCurrentPlayer] = React.useState(ACTIONS.X_PLAYER);
 
   function clickHanler(sq) {
-    if (!state.hasOwnProperty(sq.cellID) || sq.cellID === ACTIONS.CLEAR) {
-      dispatch({ clickedCell: sq.cellID, player: currentPlayer });
-      if (sq.cellID !== ACTIONS.CLEAR) {
-        const imgLink =
-          currentPlayer === ACTIONS.X_PLAYER ? ACTIONS.X_IMG : ACTIONS.O_IMG;
-        tableGame[sq.key - 1].move = imgLink;
-      } else {
-        setTableGame();
-        markCells("clear");
-      }
-
-      const winner = winCheck(currentPlayer, state);
-      if (winner) {
-        switch (winner) {
-          case ACTIONS.ROW_1_WIN:
-            markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_2, ACTIONS.CELL_3);
-            return;
-          case ACTIONS.ROW_2_WIN:
-            markCells("add", ACTIONS.CELL_4, ACTIONS.CELL_5, ACTIONS.CELL_6);
-            return;
-          case ACTIONS.ROW_3_WIN:
-            markCells("add", ACTIONS.CELL_7, ACTIONS.CELL_8, ACTIONS.CELL_9);
-            return;
-          case ACTIONS.COL_1_WIN:
-            markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_4, ACTIONS.CELL_7);
-            return;
-          case ACTIONS.COL_2_WIN:
-            markCells("add", ACTIONS.CELL_2, ACTIONS.CELL_5, ACTIONS.CELL_8);
-            return;
-          case ACTIONS.COL_3_WIN:
-            markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_6, ACTIONS.CELL_9);
-            return;
-          case ACTIONS.CROSS_1_WIN:
-            markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_5, ACTIONS.CELL_7);
-            return;
-          case ACTIONS.CROSS_2_WIN:
-            markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_5, ACTIONS.CELL_9);
-            return;
-          default:
-            return;
+    if (!winner || sq.cellID === ACTIONS.CLEAR) {
+      if (!state.hasOwnProperty(sq.cellID) || sq.cellID === ACTIONS.CLEAR) {
+        dispatch({ clickedCell: sq.cellID, player: currentPlayer });
+        if (sq.cellID !== ACTIONS.CLEAR) {
+          const imgLink =
+            currentPlayer === ACTIONS.X_PLAYER ? ACTIONS.X_IMG : ACTIONS.O_IMG;
+          tableGame[sq.key - 1].move = imgLink;
+        } else {
+          setTableGame();
+          markCells("clear");
         }
-      }
 
-      sq.cellID !== ACTIONS.CLEAR && currentPlayer === ACTIONS.X_PLAYER
-        ? setCurrentPlayer(ACTIONS.O_PLAYER)
-        : setCurrentPlayer(ACTIONS.X_PLAYER);
+        sq.cellID !== ACTIONS.CLEAR && currentPlayer === ACTIONS.X_PLAYER
+          ? setCurrentPlayer(ACTIONS.O_PLAYER)
+          : setCurrentPlayer(ACTIONS.X_PLAYER);
+      }
     }
   }
 
@@ -156,17 +126,81 @@ export default function App() {
     }
   }
 
+  const checkWinnerPlayer =
+    currentPlayer === ACTIONS.X_PLAYER ? ACTIONS.O_PLAYER : ACTIONS.X_PLAYER;
+
+  const winner = winCheck(checkWinnerPlayer, state);
+  if (winner === ACTIONS.ROW_1_WIN) {
+    markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_2, ACTIONS.CELL_3);
+  }
+  if (winner === ACTIONS.ROW_2_WIN) {
+    markCells("add", ACTIONS.CELL_4, ACTIONS.CELL_5, ACTIONS.CELL_6);
+  }
+  if (winner === ACTIONS.ROW_3_WIN) {
+    markCells("add", ACTIONS.CELL_7, ACTIONS.CELL_8, ACTIONS.CELL_9);
+  }
+  if (winner === ACTIONS.COL_1_WIN) {
+    markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_4, ACTIONS.CELL_7);
+  }
+  if (winner === ACTIONS.COL_2_WIN) {
+    markCells("add", ACTIONS.CELL_2, ACTIONS.CELL_5, ACTIONS.CELL_8);
+  }
+  if (winner === ACTIONS.COL_3_WIN) {
+    markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_6, ACTIONS.CELL_9);
+  }
+  if (winner === ACTIONS.CROSS_1_WIN) {
+    markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_5, ACTIONS.CELL_7);
+  }
+  if (winner === ACTIONS.CROSS_2_WIN) {
+    markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_5, ACTIONS.CELL_9);
+  }
+
+  // if (winner) {
+  //   switch (winner) {
+  //     case ACTIONS.ROW_1_WIN:
+  //       markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_2, ACTIONS.CELL_3);
+  //       return;
+  //     case ACTIONS.ROW_2_WIN:
+  //       markCells("add", ACTIONS.CELL_4, ACTIONS.CELL_5, ACTIONS.CELL_6);
+  //       return;
+  //     case ACTIONS.ROW_3_WIN:
+  //       markCells("add", ACTIONS.CELL_7, ACTIONS.CELL_8, ACTIONS.CELL_9);
+  //       return;
+  //     case ACTIONS.COL_1_WIN:
+  //       markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_4, ACTIONS.CELL_7);
+  //       return;
+  //     case ACTIONS.COL_2_WIN:
+  //       markCells("add", ACTIONS.CELL_2, ACTIONS.CELL_5, ACTIONS.CELL_8);
+  //       return;
+  //     case ACTIONS.COL_3_WIN:
+  //       markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_6, ACTIONS.CELL_9);
+  //       return;
+  //     case ACTIONS.CROSS_1_WIN:
+  //       markCells("add", ACTIONS.CELL_3, ACTIONS.CELL_5, ACTIONS.CELL_7);
+  //       return;
+  //     case ACTIONS.CROSS_2_WIN:
+  //       markCells("add", ACTIONS.CELL_1, ACTIONS.CELL_5, ACTIONS.CELL_9);
+  //       return;
+  //     default:
+  //       return;
+  //   }
+  // }
+  function WinnerIs() {
+    if (winner) {
+      return <><h2>{checkWinnerPlayer} Player</h2> is the winner!!!</>;
+    }
+  }
   return (
     <>
       <header className="App-header">
-        <h1> X-O Game</h1>
+        <h1> X/O Game</h1>
       </header>
       <main className="table-container">
         <div className="grid-container">
           {tableGame.map((sq) => {
             return (
               <div key={sq.key} id={sq.cellID} onClick={() => clickHanler(sq)}>
-                <img src={sq.move} alt="" />
+                {sq.move !== null && <img src={sq.move} alt="" />}
               </div>
             );
           })}
@@ -174,6 +208,9 @@ export default function App() {
         <button onClick={() => clickHanler({ cellID: ACTIONS.CLEAR })}>
           Clear Game
         </button>
+        <h3>
+          <WinnerIs />
+        </h3>
       </main>
     </>
   );

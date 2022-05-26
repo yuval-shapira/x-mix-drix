@@ -33,3 +33,12 @@ img{
 div.win{
   background-color: rgb(47, 252, 211);
 }
+h2{
+  display: inline-block;
+  color: rebeccapurple;
+  font-size: 3rem;
+}
+h3{
+  color: beige;
+  font-size: 2em;
+}

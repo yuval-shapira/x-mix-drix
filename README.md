@@ -2,6 +2,11 @@
 
 This project was bootstrapped with [Create React App]
 
+## Old known game...
+
+    Choose a cell to place your move and click on it.
+    Now the tern moved to the second player.
+
 #### Port: http://localhost:3000
 
 ## npm start to play
@@ -14,8 +19,8 @@ This project was bootstrapped with [Create React App]
 
 ## App.js
 
-    main ligic file
+    main logic file
 
 ## HelperFunc folder
 
-    WinCheck.mjs
+    WinCheckAndMark.mjs
