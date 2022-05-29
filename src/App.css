@@ -14,10 +14,11 @@ body {
 }
 .table-container {
   display: inline-block;
+  justify-items: center;
 }
 .grid-container {
   display: grid;
-  grid-template: repeat(3, 150px) / repeat(3, 150px);
+  grid-template: repeat(3, 120px) / repeat(3, 120px);
   gap: 15px;
   background-color: #5d5b5b;
 }
@@ -34,11 +35,14 @@ div.win{
   background-color: rgb(47, 252, 211);
 }
 h2{
-  display: inline-block;
+  display: inline;
   color: rebeccapurple;
-  font-size: 3rem;
+  font-size: 2rem;
 }
 h3{
   color: beige;
   font-size: 2em;
+}
+button{
+  display: block;
 }
