@@ -15,12 +15,14 @@ body {
 .table-container {
   display: inline-block;
   justify-items: center;
+  align-items: center;
 }
 .grid-container {
   display: grid;
   grid-template: repeat(3, 120px) / repeat(3, 120px);
   gap: 15px;
   background-color: #5d5b5b;
+  
 }
 
 .grid-container div {
@@ -44,5 +46,24 @@ h3{
   font-size: 2em;
 }
 button{
-  display: block;
+  background-color: #5d5b5b;
+  color: beige;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  box-shadow: 3px 3px 5px #000000;
+}
+button:hover{
+  background-color: beige ;
+  color: #5d5b5b;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  box-shadow: 3px 3px 5px #000000;
 }

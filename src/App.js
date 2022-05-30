@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import winCheck from "./HelpersFunc/WinCheck.mjs";
 
@@ -25,21 +25,34 @@ const ACTIONS = {
   O_IMG: "https://upload.wikimedia.org/wikipedia/commons/5/54/Red_Serif_O.svg",
 };
 
-
 export default function App() {
   const [currentPlayer, setCurrentPlayer] = React.useState(ACTIONS.X_PLAYER);
+  const [currentWinner, setCurrentWinner] = React.useState(null);
 
-  function setNewGame() {
+  function setNewGameHanler() {
     winner = null;
     playerToCheck = null;
     setTableGame();
+    console.log(`currentPlayer 1: ${currentPlayer}`);
+    //setCurrentPlayer("test");
+    console.log(`currentPlayer 2: ${currentPlayer}`);
     setCurrentPlayer(ACTIONS.X_PLAYER);
+    setCurrentWinner(currentPlayer);
+    console.log(`currentPlayer 3: ${currentPlayer}`);
   }
 
-  function clickHanler(sq) {
+  function clickOnCellHanler(sq) {
     if (!winner && tableGame[sq.key].move === null) {
       playerToCheck = currentPlayer;
       tableGame[sq.key].move = currentPlayer;
+      winner = winCheck(playerToCheck, tableGame);
+      winner &&
+        winner.forEach((element) => {
+          tableGame[element].className = "win";
+        });
+      //winner && setCurrentPlayer(ACTIONS.O_PLAYER)
+      //console.log(`winner: ${winner}`);
+
       if (currentPlayer === ACTIONS.X_PLAYER) {
         tableGame[sq.key].image = ACTIONS.X_IMG;
         setCurrentPlayer(ACTIONS.O_PLAYER);
@@ -47,11 +60,6 @@ export default function App() {
         tableGame[sq.key].image = ACTIONS.O_IMG;
         setCurrentPlayer(ACTIONS.X_PLAYER);
       }
-      winner = winCheck(playerToCheck, tableGame);
-      winner &&
-        winner.forEach((element) => {
-          tableGame[element].className = "win";
-        });
       return;
     }
   }
@@ -64,6 +72,10 @@ export default function App() {
       );
     }
   }
+  // useEffect(() => {
+  //   setCurrentPlayer(ACTIONS.X_PLAYER);
+  // }, [winner]); 
+
   return (
     <>
       <header className="App-header">
@@ -76,15 +88,17 @@ export default function App() {
               <div
                 key={sq.key}
                 className={sq.className}
-                onClick={() => clickHanler(sq)}
+                onClick={() => clickOnCellHanler(sq)}
               >
                 {sq.image !== null && <img src={sq.image} alt="" />}
               </div>
             );
           })}
         </div>
-        <button onClick={() => setNewGame()}>Clear Game</button>
-        <div><WinnerIs /></div>
+        <button onClick={() => setNewGameHanler()}>Clear Game</button>
+        <div>
+          <WinnerIs />
+        </div>
       </main>
     </>
   );
