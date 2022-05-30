@@ -1,4 +1,4 @@
-export default function winCheck(playerToCheck, tableValues) {
+export default function winCheck(tableValues, playerToCheck) {
   if (
     tableValues[0].move === playerToCheck &&
     tableValues[1].move === playerToCheck &&

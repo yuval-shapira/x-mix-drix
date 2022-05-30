@@ -1,65 +1,61 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./App.css";
 import winCheck from "./HelpersFunc/WinCheck.mjs";
 
-let tableGame = [];
-let winner = null;
-let playerToCheck = null;
+const ACTIONS = {
+  X_PLAYER: "X",
+  O_PLAYER: "O",
+  X_IMG: "./Images/red_X.png",
+  O_IMG: "./Images/red_O.png",
+};
 
-function setTableGame() {
-  tableGame = [];
+function initTableGame() {
+  const initTableGame = [];
   for (let key = 0; key < 9; key++) {
-    tableGame.push({
+    initTableGame.push({
       key,
       move: null,
       image: null,
     });
   }
+  return initTableGame;
 }
-setTableGame();
-
-const ACTIONS = {
-  X_PLAYER: "X",
-  O_PLAYER: "O",
-  X_IMG: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Red_x.svg",
-  O_IMG: "https://upload.wikimedia.org/wikipedia/commons/5/54/Red_Serif_O.svg",
-};
 
 export default function App() {
   const [currentPlayer, setCurrentPlayer] = React.useState(ACTIONS.X_PLAYER);
-  const [currentWinner, setCurrentWinner] = React.useState(null);
+  const [tableGame, setTableGame] = React.useState(initTableGame());
+  const [winner, setWinner] = React.useState(null);
+  const [playerToCheck, setPlayerToCheck] = React.useState(null);
 
-  function setNewGameHanler() {
-    winner = null;
-    playerToCheck = null;
-    setTableGame();
-    console.log(`currentPlayer 1: ${currentPlayer}`);
-    //setCurrentPlayer("test");
-    console.log(`currentPlayer 2: ${currentPlayer}`);
+  let newTableGame = [...tableGame];
+
+  function newGameHanler() {
+    setWinner(null);
+    setPlayerToCheck(null);
+    setTableGame(initTableGame());
     setCurrentPlayer(ACTIONS.X_PLAYER);
-    setCurrentWinner(currentPlayer);
-    console.log(`currentPlayer 3: ${currentPlayer}`);
   }
 
   function clickOnCellHanler(sq) {
-    if (!winner && tableGame[sq.key].move === null) {
-      playerToCheck = currentPlayer;
-      tableGame[sq.key].move = currentPlayer;
-      winner = winCheck(playerToCheck, tableGame);
-      winner &&
-        winner.forEach((element) => {
-          tableGame[element].className = "win";
+    if (!winner && newTableGame[sq.key].move === null) {
+      setPlayerToCheck(currentPlayer);
+      newTableGame[sq.key].move = currentPlayer;
+      const isWinner = winCheck(newTableGame, currentPlayer);
+      if (isWinner) {
+        setWinner(isWinner);
+      }
+      isWinner &&
+        isWinner.forEach((element) => {
+          newTableGame[element].className = "win";
         });
-      //winner && setCurrentPlayer(ACTIONS.O_PLAYER)
-      //console.log(`winner: ${winner}`);
-
       if (currentPlayer === ACTIONS.X_PLAYER) {
-        tableGame[sq.key].image = ACTIONS.X_IMG;
+        newTableGame[sq.key].image = ACTIONS.X_IMG;
         setCurrentPlayer(ACTIONS.O_PLAYER);
       } else {
-        tableGame[sq.key].image = ACTIONS.O_IMG;
+        newTableGame[sq.key].image = ACTIONS.O_IMG;
         setCurrentPlayer(ACTIONS.X_PLAYER);
       }
+      setTableGame(newTableGame);
       return;
     }
   }
@@ -72,10 +68,6 @@ export default function App() {
       );
     }
   }
-  // useEffect(() => {
-  //   setCurrentPlayer(ACTIONS.X_PLAYER);
-  // }, [winner]); 
-
   return (
     <>
       <header className="App-header">
@@ -83,7 +75,7 @@ export default function App() {
       </header>
       <main className="table-container">
         <div className="grid-container">
-          {tableGame.map((sq) => {
+          {newTableGame.map((sq) => {
             return (
               <div
                 key={sq.key}
@@ -95,7 +87,7 @@ export default function App() {
             );
           })}
         </div>
-        <button onClick={() => setNewGameHanler()}>Clear Game</button>
+        <button onClick={() => newGameHanler()}>Clear Game</button>
         <div>
           <WinnerIs />
         </div>
