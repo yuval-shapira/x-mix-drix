@@ -1,76 +1,97 @@
 import React from "react";
 import "./App.css";
 import winCheck from "./HelpersFunc/WinCheck.mjs";
-const tableValues = [null, null, null, null, null, null, null, null, null];
 
-function alertWinner(currentPlayer) {
-  alert(`${currentPlayer} player won the game!!`);
+const ACTIONS = {
+  X_PLAYER: "X",
+  O_PLAYER: "O",
+  X_IMG: "./Images/red_X.png",
+  O_IMG: "./Images/red_O.png",
+};
+
+function initTableGame() {
+  const initTableGame = [];
+  for (let key = 0; key < 9; key++) {
+    initTableGame.push({
+      key,
+      move: null,
+      image: null,
+    });
+  }
+  return initTableGame;
 }
 
-function App() {
-  function clickHandler(cellNum) {
-    if (tableValues[cellNum] === null) {
-      tableValues[cellNum] = currentPlayer;
-      console.log(tableValues);
-      const isThereWinner = winCheck(currentPlayer, tableValues);
-      if (isThereWinner === "Yes") {
-        alertWinner(currentPlayer);
-        initNewGame();
-      } else {
-        currentPlayer === "X" ? setPlayer("O") : setPlayer("X");
+export default function App() {
+  const [currentPlayer, setCurrentPlayer] = React.useState(ACTIONS.X_PLAYER);
+  const [tableGame, setTableGame] = React.useState(initTableGame());
+  const [winner, setWinner] = React.useState(null);
+  const [playerToCheck, setPlayerToCheck] = React.useState(null);
+
+  let newTableGame = [...tableGame];
+
+  function newGameHanler() {
+    setWinner(null);
+    setPlayerToCheck(null);
+    setTableGame(initTableGame());
+    setCurrentPlayer(ACTIONS.X_PLAYER);
+  }
+
+  function clickOnCellHanler(sq) {
+    if (!winner && newTableGame[sq.key].move === null) {
+      setPlayerToCheck(currentPlayer);
+      newTableGame[sq.key].move = currentPlayer;
+      const isWinner = winCheck(newTableGame, currentPlayer);
+      if (isWinner) {
+        setWinner(isWinner);
       }
+      isWinner &&
+        isWinner.forEach((element) => {
+          newTableGame[element].className = "win";
+        });
+      if (currentPlayer === ACTIONS.X_PLAYER) {
+        newTableGame[sq.key].image = ACTIONS.X_IMG;
+        setCurrentPlayer(ACTIONS.O_PLAYER);
+      } else {
+        newTableGame[sq.key].image = ACTIONS.O_IMG;
+        setCurrentPlayer(ACTIONS.X_PLAYER);
+      }
+      setTableGame(newTableGame);
+      return;
     }
   }
-
-  function initNewGame() {
-    for (let i = 0; i < tableValues.length; i++) {
-      tableValues[i] = null;
+  function WinnerIs() {
+    if (winner) {
+      return (
+        <>
+          <h2>{playerToCheck} Player is the winner!!!</h2>
+        </>
+      );
     }
-    setPlayer("X");
   }
-
-  function TableComponant({ cellNum }) {
-    return (
-      <div onClick={() => clickHandler(cellNum)} className={cellNum}>
-        {cellNum}
-      </div>
-    );
-  }
-  const [currentPlayer, setPlayer] = React.useState("X");
-  const tableGame = [];
-  const numOfCells = 9;
-  for (let i = 0; i < numOfCells; i++)
-    tableGame.push(<TableComponant key={i} cellNum={i} move="" />);
-  console.log(tableGame);
   return (
     <>
       <header className="App-header">
-        <h1>X Mix Drix</h1>
+        <h1> X/O Game</h1>
       </header>
       <main className="table-container">
-        <div className="grid-container">{tableGame}</div>
+        <div className="grid-container">
+          {newTableGame.map((sq) => {
+            return (
+              <div
+                key={sq.key}
+                className={sq.className}
+                onClick={() => clickOnCellHanler(sq)}
+              >
+                {sq.image !== null && <img src={sq.image} alt="" />}
+              </div>
+            );
+          })}
+        </div>
+        <button onClick={() => newGameHanler()}>Clear Game</button>
+        <div>
+          <WinnerIs />
+        </div>
       </main>
     </>
   );
 }
-
-export default App;
-
-/*
-write players name
-choose num of matches
-start game
-
-1. create state for player
-2. player choose cell 
-3. insert X or O to the selected cell 
-4. check if player won
-4.1 YES: end game
-     message who won
-     clear tableValues
-     start new match
-4.2 NO: toggle to other player and back to line 1
-
-4.1:
-
-*/
