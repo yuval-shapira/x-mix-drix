@@ -15,12 +15,15 @@ This project was bootstrapped with [Create React App]
 
     React.useState()
 
-    React.useReducer()
-
-## App.js
+## ./App.js
 
     main logic file
 
-## HelperFunc folder
-
-    WinCheckAndMark.mjs
+##  ./HelperFunc/WinCheck.mjs => Function winCheck
+    Gets 2 paramenter:
+        1. which player to check 
+        2. Copy of table game current state
+    
+    Returns:
+        An array with 3 cells numbers (that represent row/column/cross) - if player won
+        false - if player didn't win

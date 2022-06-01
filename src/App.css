@@ -1,5 +1,5 @@
 :root {
-  --numOfColumns: 3;
+  --boardSize: 3;
 }
 
 body {
@@ -19,7 +19,7 @@ body {
 }
 .grid-container {
   display: grid;
-  grid-template: repeat(3, 120px) / repeat(3, 120px);
+  grid-template: repeat(var(--boardSize), 120px) / repeat(var(--boardSize), 120px);
   gap: 15px;
   background-color: #5d5b5b;
   
